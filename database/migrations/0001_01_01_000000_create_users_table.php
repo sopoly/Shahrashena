@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User\UserFields;
 
 return new class extends Migration
 {
@@ -13,10 +14,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string(UserFields::NAME)->nullable();
+            $table->string(UserFields::EMAIL)->unique();
+            $table->string(UserFields::PASSWORD)->nullable();
+            $table->timestamp(UserFields::EMAIL_VERIFIED_AT)->nullable();
+            $table->string(UserFields::PHONE_NUMBER)->nullable();
+            $table->string(UserFields::OTP_CODE)->nullable();
+            $table->dateTime(UserFields::OTP_EXPIRE_AT)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
