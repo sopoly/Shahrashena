@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\CoreCategory\CoreCategoryFields;
+use App\Models\CoreCategoryFeature\CategoryFeaturefields;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('core_category_features', function (Blueprint $table) {
+        Schema::create(CategoryFeaturefields::TABLE, function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId(CategoryFeaturefields::CATEGORY_ID)->constrained(CoreCategoryFields::TABLE)->cascadeOnDelete();
+            $table->text(CategoryFeaturefields::TITLE);
+            $table->string(CategoryFeaturefields::TYPE);
+            $table->string(CategoryFeaturefields::AVAILABLE_CHOICES)->nullable();
         });
     }
 

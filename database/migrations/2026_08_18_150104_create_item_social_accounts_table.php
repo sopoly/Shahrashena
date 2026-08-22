@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Item\ItemFields;
+use App\Models\ItemSocialAccount\SocialAccountFields;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_social_accounts', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create(SocialAccountFields::TABLE, function (Blueprint $table) {
+            $table->foreignId(SocialAccountFields::ITEM_ID)->constrained(ItemFields::TABLE)->cascadeOnDelete();
+            $table->string(SocialAccountFields::SOCIAL_SLUG);
+            $table->string(SocialAccountFields::ACCOUNT_ID);
         });
     }
 

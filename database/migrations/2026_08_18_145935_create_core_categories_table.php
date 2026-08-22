@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\CoreCategory\CoreCategoryFields;
 
 return new class extends Migration
 {
@@ -11,9 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('core_categories', function (Blueprint $table) {
+        Schema::create(CoreCategoryFields::TABLE, function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string(CoreCategoryFields::SLUG);
         });
     }
 

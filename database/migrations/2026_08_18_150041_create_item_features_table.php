@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\CoreCategoryFeature\CategoryFeaturefields;
+use App\Models\Item\ItemFields;
+use App\Models\ItemFeature\ItemFeatureFields;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,9 +14,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('item_features', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create(ItemFeatureFields::TABLE, function (Blueprint $table) {
+            $table->foreignId(ItemFeatureFields::ITEM_ID)->constrained(ItemFields::TABLE)->cascadeOnDelete();
+            $table->foreignId(ItemFeatureFields::FEATURE_ID)->constrained(CategoryFeaturefields::TABLE)->cascadeOnDelete();
+            $table->json(ItemFeatureFields::FEATURE_VALUE)->nullable();
         });
     }
 
