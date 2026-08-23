@@ -8,7 +8,6 @@ services:
         working_dir: /var/www
         volumes:
             - .:/var/www
-            - vendor_data:/var/www/vendor
         networks:
             - laravel
         depends_on:
@@ -34,7 +33,6 @@ services:
         working_dir: /var/www
         volumes:
             - .:/var/www
-            - node_modules_data:/var/www/node_modules
         ports:
             - "5173:5173"
         command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
@@ -56,6 +54,11 @@ services:
             - laravel
         ports:
             - "3306:3306"
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+            interval: 5s
+            timeout: 5s
+            retries: 10
 
     redis:
         image: redis:alpine
@@ -77,12 +80,13 @@ services:
         command: php artisan queue:work redis --sleep=3 --tries=3
         volumes:
             - .:/var/www
-            - vendor_data:/var/www/vendor
         networks:
             - laravel
         depends_on:
-            - app
-            - redis
+            mysql:
+                condition: service_healthy
+            redis:
+                condition: service_started
 
 networks:
     laravel:
@@ -93,7 +97,4 @@ volumes:
         driver: local
     redis_data:
         driver: local
-    vendor_data:
-        driver: local
-    node_modules_data:
-        driver: local
+
