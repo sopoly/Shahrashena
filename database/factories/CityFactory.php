@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\City\CityFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class CityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            CityFields::TITLE => fake()->city(),
         ];
     }
 }

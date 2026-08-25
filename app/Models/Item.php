@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\ItemFeature\ItemFeatureFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,13 +29,19 @@ class Item extends Model
     {
         return $this->belongsTo(Location::class, 'location_id');
     }
+    /*
+    /TDOD: Two buissiness constraints: 1. An item can have a feature belonging to its category only.
+    /2. An item can only reference a ;ocatoon_id that belongs to its city_id. This is a business constraint and should be enforced in the application layer.
+    / Remember to handle it using Request validation and not in the database layer. The database layer should only enforce referential integrity.
+    */
+    
 //    public function owner(): BelongsTo
 //    {
 //        //
 //    }
     public function socialAccounts(): HasMany
     {
-        return $this->hasMany('ItemSocialAccount', 'item_id');
+        return $this->hasMany(ItemSocialAccount::class, 'item_id');
     }
     public function itemFeatures(): HasMany
     {
@@ -42,9 +49,9 @@ class Item extends Model
     }
     public function features(): BelongsToMany
     {
-        return $this->belongsToMany(CoreCategoryFeature::class, 'item_features', 'item_id', 'feature_id')
+        return $this->belongsToMany(CoreCategoryFeature::class, ItemFeatureFields::TABLE, ItemFeatureFields::ITEM_ID, ItemFeatureFields::FEATURE_ID)
             ->using(ItemFeature::class)
-            ->withPivot('feature_value');
+            ->withPivot(ItemFeatureFields::FEATURE_VALUE);
     }
 
 }

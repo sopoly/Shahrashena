@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CoreCategory;
+use App\Models\CoreCategory\CoreCategoryFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class CoreCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            CoreCategoryFields::SLUG => fake()->unique()->slug(),
         ];
     }
 }

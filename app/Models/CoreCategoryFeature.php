@@ -23,7 +23,7 @@ class CoreCategoryFeature extends Model
 
     public function items(): BelongsToMany
     {
-        return $this->belongsToMany(Item::class, 'item_feature', 'feature_id', 'item_id')
+        return $this->belongsToMany(Item::class, 'item_features', 'feature_id', 'item_id')
             ->using(ItemFeature::class)
             ->withPivot('feature_value');
     }

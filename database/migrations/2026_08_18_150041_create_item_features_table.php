@@ -15,9 +15,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(ItemFeatureFields::TABLE, function (Blueprint $table) {
-            $table->foreignId(ItemFeatureFields::ITEM_ID)->constrained(ItemFields::TABLE)->cascadeOnDelete();
-            $table->foreignId(ItemFeatureFields::FEATURE_ID)->constrained(CategoryFeaturefields::TABLE)->cascadeOnDelete();
+            $table->foreignId(ItemFeatureFields::ITEM_ID)
+                ->constrained(ItemFields::TABLE)
+                ->cascadeOnDelete();
+            $table->foreignId(ItemFeatureFields::FEATURE_ID)
+                ->constrained(CategoryFeaturefields::TABLE)
+                ->cascadeOnDelete();
             $table->json(ItemFeatureFields::FEATURE_VALUE)->nullable();
+            $table->unique([
+                ItemFeatureFields::ITEM_ID,
+                ItemFeatureFields::FEATURE_ID,
+            ]);
         });
     }
 

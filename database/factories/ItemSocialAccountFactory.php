@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Item;
+use App\Models\Item\ItemFields;
 use App\Models\ItemSocialAccount;
+use App\Models\ItemSocialAccount\SocialAccountFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +21,16 @@ class ItemSocialAccountFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            SocialAccountFields::ITEM_ID => Item::query()
+                ->inRandomOrder()
+                ->value(ItemFields::ID),
+            SocialAccountFields::SOCIAL_SLUG => fake()->randomElement([
+                'instagram',
+                'telegram',
+                'x',
+                'linkedin',
+            ]),
+            SocialAccountFields::ACCOUNT_ID => fake()->userName(),
         ];
     }
 }

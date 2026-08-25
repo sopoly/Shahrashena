@@ -14,6 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(SocialAccountFields::TABLE, function (Blueprint $table) {
+            $table->id();
             $table->foreignId(SocialAccountFields::ITEM_ID)->constrained(ItemFields::TABLE)->cascadeOnDelete();
             $table->string(SocialAccountFields::SOCIAL_SLUG);
             $table->string(SocialAccountFields::ACCOUNT_ID);

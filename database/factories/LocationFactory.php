@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
+use App\Models\City\CityFields;
 use App\Models\Location;
+use App\Models\Location\LocationFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +21,10 @@ class LocationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            LocationFields::CITY_ID => City::query()
+                ->inRandomOrder()
+                ->value(CityFields::ID),
+            LocationFields::TITLE => fake()->streetName(),
         ];
     }
 }

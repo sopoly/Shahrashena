@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create(CoreCategoryFields::TABLE, function (Blueprint $table) {
             $table->id();
-            $table->string(CoreCategoryFields::SLUG);
+            $table->string(CoreCategoryFields::SLUG)->unique();
         });
     }
 
