@@ -18,7 +18,8 @@ class LocationSeeder extends Seeder
         $cityIds = City::pluck('id');
 
         if ($cityIds->isEmpty()) {
-            throw new \RuntimeException('Seed cities before seeding locations.');
+            $this->call(CitySeeder::class);
+            $cityIds = City::pluck('id');
         }
 
         Location::factory()
