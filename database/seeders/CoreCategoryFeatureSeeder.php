@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\CoreCategory;
+use App\Models\CoreCategoryFeature;
+use App\Models\CoreCategoryFeature\CategoryFeaturefields;
 use Illuminate\Database\Seeder;
 
 class CoreCategoryFeatureSeeder extends Seeder
@@ -12,6 +14,13 @@ class CoreCategoryFeatureSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $categoryIds = CoreCategory::pluck('id');
+
+        CoreCategoryFeature::factory()
+            ->count(100)
+            ->state(fn () => [
+                CategoryFeaturefields::CATEGORY_ID => $categoryIds->random(),
+            ])
+            ->create();
     }
 }

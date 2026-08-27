@@ -21,12 +21,13 @@ class CoreCategoryFeatureFactory extends Factory
     public function definition(): array
     {
         return [
-            CategoryFeaturefields::CATEGORY_ID => CoreCategory::query()
-                ->inRandomOrder()
-                ->value(CoreCategoryFields::ID),
+            CategoryFeaturefields::CATEGORY_ID => null, // This will be set in the seeder using state()
             CategoryFeaturefields::TITLE => fake()->words(2, true),
             CategoryFeaturefields::TYPE => fake()->randomElement(['boolean', 'select']),
-            CategoryFeaturefields::AVAILABLE_CHOICES => fake()->words(3, true),
+            CategoryFeaturefields::AVAILABLE_CHOICES => fn (array $attributes) => 
+                $attributes[CategoryFeaturefields::TYPE] === 'select' 
+                    ? fake()->words(3, true) 
+                    : null,
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\CoreCategory;
 use Illuminate\Database\Seeder;
 
 class CoreCategorySeeder extends Seeder
@@ -12,6 +12,6 @@ class CoreCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        CoreCategory::factory()->count(10)->create();
     }
 }

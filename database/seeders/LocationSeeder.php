@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\City;
 use App\Models\Location;
@@ -16,11 +15,6 @@ class LocationSeeder extends Seeder
     public function run(): void
     {
         $cityIds = City::pluck('id');
-
-        if ($cityIds->isEmpty()) {
-            $this->call(CitySeeder::class);
-            $cityIds = City::pluck('id');
-        }
 
         Location::factory()
             ->count(1000)
