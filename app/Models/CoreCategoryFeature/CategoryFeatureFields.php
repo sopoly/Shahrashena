@@ -4,7 +4,7 @@ namespace App\Models\CoreCategoryFeature;
 
 use App\Models\FieldsClass;
 
-class CategoryFeaturefields extends FieldsClass
+class CategoryFeatureFields extends FieldsClass
 {
     const TABLE = 'core_category_features';
 
