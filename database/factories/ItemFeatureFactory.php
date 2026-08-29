@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ItemFeature;
 use App\Models\CoreCategoryFeature\CategoryFeaturefields;
 use App\Models\Item;
 use App\Models\Item\ItemFields;
