@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CoreCategoryFeature\CategoryFeatureFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,10 @@ class CoreCategoryFeature extends Model
 
     protected $guarded = [];
     public $timestamps = false;
+
+    protected $casts = [
+        CategoryFeatureFields::AVAILABLE_CHOICES => 'array',
+    ];
 
     public function category(): BelongsTo
     {
