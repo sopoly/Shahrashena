@@ -15,6 +15,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(ItemFeatureFields::TABLE, function (Blueprint $table) {
+            $table->id();
             $table->foreignId(ItemFeatureFields::ITEM_ID)
                 ->constrained(ItemFields::TABLE)
                 ->cascadeOnDelete();
