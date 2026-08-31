@@ -2,12 +2,14 @@
 
 namespace App\Filament\Resources\CoreCategoryFeatures\Schemas;
 
+use App\Enums\FeatureType;
 use App\Models\CoreCategory\CoreCategoryFields;
 use App\Models\CoreCategoryFeature\CategoryFeatureFields;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class CoreCategoryFeatureForm
@@ -27,19 +29,21 @@ class CoreCategoryFeatureForm
                     ->columnSpanFull(),
                 Select::make(CategoryFeatureFields::TYPE)
                     ->required()
-                    ->options([
-                        'select' => 'Select',
-                        'boolean' => 'Boolean',
-                    ])
+                    ->options(FeatureType::options())
                     ->label('Feature Type')
                     ->columnSpanFull()
-                    ->live(),
-                TextInput::make(CategoryFeatureFields::AVAILABLE_CHOICES)
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, ?string $state): void {
+                        if (! FeatureType::tryFrom((string) $state)?->hasChoices()) {
+                            $set(CategoryFeatureFields::AVAILABLE_CHOICES, []);
+                        }
+                    }),
+                TagsInput::make(CategoryFeatureFields::AVAILABLE_CHOICES)
                     ->label('Available Choices')
-                    ->helperText('Comma separated values for available choices. Example: "Choice 1, Choice 2, Choice 3"')
+                    ->helperText('Add one choice per tag. Used when the type is Select or Multiselect.')
                     ->columnSpanFull()
-                    ->visible(fn (Get $get) => $get(CategoryFeatureFields::TYPE) === 'select')
-                    // ->disabled(fn (Get $get) => $get(CategoryFeatureFields::TYPE) !== 'select'),
+                    ->visible(fn (Get $get): bool => FeatureType::tryFrom((string) $get(CategoryFeatureFields::TYPE))?->hasChoices() ?? false)
+                    ->required(fn (Get $get): bool => FeatureType::tryFrom((string) $get(CategoryFeatureFields::TYPE))?->hasChoices() ?? false),
             ]);
     }
 }

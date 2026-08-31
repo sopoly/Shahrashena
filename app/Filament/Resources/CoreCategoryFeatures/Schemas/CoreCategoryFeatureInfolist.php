@@ -18,7 +18,8 @@ class CoreCategoryFeatureInfolist
                     ->columnSpanFull(),
                 TextEntry::make(CategoryFeatureFields::TYPE),
                 TextEntry::make(CategoryFeatureFields::AVAILABLE_CHOICES)
-                    ->placeholder('-'),
+                    ->placeholder('-')
+                    ->formatStateUsing(fn (mixed $state): ?string => is_array($state) ? implode(', ', $state) : $state),
             ]);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\CoreCategoryFeatures\Tables;
 
 use App\Models\CoreCategoryFeature\CategoryFeatureFields;
-use App\Models\CoreCategory\CoreCategoryFields;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -26,7 +25,8 @@ class CoreCategoryFeaturesTable
                 TextColumn::make(CategoryFeatureFields::TYPE)
                     ->searchable(),
                 TextColumn::make(CategoryFeatureFields::AVAILABLE_CHOICES)
-                    ->searchable(),
+                    ->formatStateUsing(fn (mixed $state): string => is_array($state) ? implode(', ', $state) : (string) $state)
+                    ->placeholder('-'),
             ])
             ->filters([
                 //
