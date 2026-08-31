@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId(CategoryFeatureFields::CATEGORY_ID)->constrained(CoreCategoryFields::TABLE)->cascadeOnDelete();
             $table->text(CategoryFeatureFields::TITLE);
             $table->string(CategoryFeatureFields::TYPE);
-            $table->string(CategoryFeatureFields::AVAILABLE_CHOICES)->nullable();
+            $table->json(CategoryFeatureFields::AVAILABLE_CHOICES)->nullable();
         });
     }
 

@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
+use App\Enums\FeatureType;
 use App\Models\CoreCategoryFeature\CategoryFeatureFields;
+use Database\Factories\CoreCategoryFeatureFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CoreCategoryFeature extends Model
 {
-    /** @use HasFactory<\Database\Factories\CoreCategoryFeatureFactory> */
+    /** @use HasFactory<CoreCategoryFeatureFactory> */
     use HasFactory;
 
     protected $guarded = [];
+
     public $timestamps = false;
 
     protected $casts = [
+        CategoryFeatureFields::TYPE => FeatureType::class,
         CategoryFeatureFields::AVAILABLE_CHOICES => 'array',
     ];
 
@@ -33,4 +36,30 @@ class CoreCategoryFeature extends Model
             ->withPivot('feature_value');
     }
 
+    /**
+     * @return array<string, string>
+     */
+    public function choiceOptions(): array
+    {
+        $choices = $this->{CategoryFeatureFields::AVAILABLE_CHOICES} ?? [];
+
+        if (is_string($choices)) {
+            $choices = array_values(array_filter(array_map('trim', explode(',', $choices))));
+        }
+
+        if (! is_array($choices)) {
+            return [];
+        }
+
+        $choices = array_values(array_filter(
+            $choices,
+            fn (mixed $choice): bool => $choice !== null && $choice !== '',
+        ));
+
+        if ($choices === []) {
+            return [];
+        }
+
+        return array_combine($choices, $choices);
+    }
 }
