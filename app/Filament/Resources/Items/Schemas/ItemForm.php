@@ -165,17 +165,16 @@ class ItemForm
             ]);
     }
 
+    protected static function typeFromFeatureId(mixed $featureId): ?FeatureType
+    {
+        if (blank($featureId)) return null;
+
+        return CoreCategoryFeature::query()->find($featureId)?->{CategoryFeatureFields::TYPE};
+    }
+
     protected static function featureType(Get $get): ?FeatureType
     {
-        $featureId = $get(ItemFeatureFields::FEATURE_ID);
-
-        if (blank($featureId)) {
-            return null;
-        }
-
-        $type = CoreCategoryFeature::query()->find($featureId)?->{CategoryFeatureFields::TYPE};
-
-        return $type instanceof FeatureType ? $type : FeatureType::tryFrom((string) $type);
+        return self::typeFromFeatureId($get(ItemFeatureFields::FEATURE_ID));
     }
 
     /**
@@ -184,11 +183,8 @@ class ItemForm
     protected static function featureChoices(Get $get): array
     {
         $featureId = $get(ItemFeatureFields::FEATURE_ID);
-
-        if (blank($featureId)) {
-            return [];
-        }
-
+        if (blank($featureId)) return [];
+        
         return CoreCategoryFeature::query()->find($featureId)?->choiceOptions() ?? [];
     }
 
@@ -235,16 +231,5 @@ class ItemForm
         };
 
         return $data;
-    }
-
-    protected static function typeFromFeatureId(mixed $featureId): ?FeatureType
-    {
-        if (blank($featureId)) {
-            return null;
-        }
-
-        $type = CoreCategoryFeature::query()->find($featureId)?->{CategoryFeatureFields::TYPE};
-
-        return $type instanceof FeatureType ? $type : FeatureType::tryFrom((string) $type);
     }
 }
