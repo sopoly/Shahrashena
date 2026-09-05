@@ -30,7 +30,7 @@ class Item extends Model
         return $this->belongsTo(Location::class, 'location_id');
     }
     /*
-    /TDOD: Two buissiness constraints: 1. An item can have a feature belonging to its category only.
+    /TDOD: Two buisiness constraints: 1. An item can have a feature belonging to its category only.
     /2. An item can only reference a ;ocatoon_id that belongs to its city_id. This is a business constraint and should be enforced in the application layer.
     / Remember to handle it using Request validation and not in the database layer. The database layer should only enforce referential integrity.
     */

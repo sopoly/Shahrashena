@@ -43,10 +43,6 @@ class CoreCategoryFeature extends Model
     {
         $choices = $this->{CategoryFeatureFields::AVAILABLE_CHOICES} ?? [];
 
-        if (is_string($choices)) {
-            $choices = array_values(array_filter(array_map('trim', explode(',', $choices))));
-        }
-
         if (! is_array($choices)) {
             return [];
         }
@@ -56,10 +52,6 @@ class CoreCategoryFeature extends Model
             fn (mixed $choice): bool => $choice !== null && $choice !== '',
         ));
 
-        if ($choices === []) {
-            return [];
-        }
-
-        return array_combine($choices, $choices);
+        return $choices === [] ? [] : array_combine($choices, $choices);
     }
 }

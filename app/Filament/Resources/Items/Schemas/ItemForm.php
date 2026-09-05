@@ -103,7 +103,7 @@ class ItemForm
                             ->addActionLabel('Add Feature')
                             ->columns(2)
                             ->defaultItems(0),
-                    ])->columns(1),
+                    ])->columnSpan('full'),
 
                 Section::make('Location')
                     ->description('Select the location for this item.')
@@ -137,7 +137,7 @@ class ItemForm
                             ->disabled(fn (Get $get) => ! $get(ItemFields::CITY_ID))
                             ->url()
                             ->required(),
-                    ])->columns(2),
+                    ])->columnSpan('full'),
 
                 Repeater::make(SocialAccountFields::TABLE)
                     ->relationship('socialAccounts')
@@ -161,7 +161,7 @@ class ItemForm
                             ->disabled(fn (callable $get) => ! $get(SocialAccountFields::SOCIAL_SLUG)),
                     ])
                     ->addActionLabel('Add Another Account')
-                    ->columns(2),
+                    ->columnSpan('full'),
             ]);
     }
 
