@@ -11,14 +11,14 @@ class ItemInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('category.id')
+                TextEntry::make('title')
+                    ->columnSpanFull(),
+                TextEntry::make('category.slug')
                     ->label('Category'),
                 TextEntry::make('city.title')
                     ->label('City'),
                 TextEntry::make('location.title')
                     ->label('Location'),
-                TextEntry::make('title')
-                    ->columnSpanFull(),
                 TextEntry::make('address'),
                 TextEntry::make('map_link')
                     ->placeholder('-'),

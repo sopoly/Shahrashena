@@ -59,9 +59,7 @@ class ItemForm
                                     ->options(function (Get $get): array {
                                         $categoryId = $get('../../'.ItemFields::CATEGORY_ID);
 
-                                        if (blank($categoryId)) {
-                                            return [];
-                                        }
+                                        if (blank($categoryId)) return [];
 
                                         return CoreCategoryFeature::query()
                                             ->where(CategoryFeatureFields::CATEGORY_ID, $categoryId)
@@ -120,21 +118,20 @@ class ItemForm
                                 ItemFields::TITLE,
                                 function (Builder $query, Get $get) {
                                     $cityId = $get(ItemFields::CITY_ID);
-
                                     return $query->where('city_id', $cityId);
                                 }
                             )
-                            ->disabled(fn (Get $get) => ! $get(ItemFields::CITY_ID))
+                            ->disabled(fn (Get $get) => blank($get(ItemFields::CITY_ID)))
                             ->label('Location')
                             ->live()
                             ->required(),
                         TextInput::make(ItemFields::ADDRESS)
                             ->label('Address')
-                            ->disabled(fn (Get $get) => ! $get(ItemFields::CITY_ID))
+                            ->disabled(fn (Get $get) => blank($get(ItemFields::CITY_ID)))
                             ->required(),
                         TextInput::make(ItemFields::MAP_LINK)
                             ->label('Map Link')
-                            ->disabled(fn (Get $get) => ! $get(ItemFields::CITY_ID))
+                            ->disabled(fn (Get $get) => blank($get(ItemFields::CITY_ID)))
                             ->url()
                             ->required(),
                     ])->columnSpan('full'),
@@ -147,18 +144,18 @@ class ItemForm
                                 SocialSlug::Facebook->value => 'Facebook',
                                 SocialSlug::Instagram->value => 'Instagram',
                                 SocialSlug::Telegram->value => 'Telegram',
-                                SocialSlug::Whatsapp->value => 'WhatsApp',
+                                SocialSlug::Whatsapp->value => 'WhatsApp',  
                                 SocialSlug::X->value => 'X',
                             ])
                             ->label('Social Network')
                             ->reactive()
+                            ->afterStateUpdated(fn (Set $set) => $set(SocialAccountFields::ACCOUNT_ID, null))
                             ->required(),
                         TextInput::make(SocialAccountFields::ACCOUNT_ID)
                             ->label('Account ID')
                             ->url()
                             ->required()
-                            ->reactive()
-                            ->disabled(fn (callable $get) => ! $get(SocialAccountFields::SOCIAL_SLUG)),
+                            ->disabled(fn (callable $get) => blank($get(SocialAccountFields::SOCIAL_SLUG))),
                     ])
                     ->addActionLabel('Add Another Account')
                     ->columnSpan('full'),

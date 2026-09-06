@@ -15,7 +15,9 @@ class ItemsTable
     {
         return $table
             ->columns([
-                TextColumn::make('category.id')
+                TextColumn::make('title')
+                    ->searchable(),
+                TextColumn::make('category.slug')
                     ->searchable(),
                 TextColumn::make('city.title')
                     ->searchable(),

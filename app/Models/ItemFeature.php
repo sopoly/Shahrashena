@@ -32,9 +32,7 @@ class ItemFeature extends Pivot
     public static function booted(): void
     {
         static::creating(function (ItemFeature $pivot): void {
-            if (! is_null($pivot->{ItemFeatureFields::FEATURE_VALUE})) {
-                return;
-            }
+            if (! is_null($pivot->{ItemFeatureFields::FEATURE_VALUE})) return;
 
             $feature = CoreCategoryFeature::query()->find($pivot->{ItemFeatureFields::FEATURE_ID});
             $type = $feature?->{CategoryFeatureFields::TYPE};
