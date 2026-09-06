@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Item;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -8,5 +9,6 @@ Route::get('/', function () {
 
 
 Route::get('/hi', function () {
-    return 'Hello, World!';
+    $item = Item::find(1);
+    dd($item->itemFeatures()->with('feature')->get('feature_value'));
 });

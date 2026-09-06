@@ -39,7 +39,7 @@ class ItemFeature extends Pivot
             $feature = CoreCategoryFeature::query()->find($pivot->{ItemFeatureFields::FEATURE_ID});
             $type = $feature?->{CategoryFeatureFields::TYPE};
 
-            $pivot->{ItemFeatureFields::FEATURE_VALUE} = match ($type instanceof FeatureType ? $type : FeatureType::tryFrom((string) $type)) {
+            $pivot->{ItemFeatureFields::FEATURE_VALUE} = match ($type) {
                 FeatureType::Boolean => false,
                 FeatureType::Select => null,
                 FeatureType::Multiselect => [],
