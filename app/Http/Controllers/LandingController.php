@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\Item\ItemFilterFields;
-use App\Classes\Item\ItemList;
 use App\Models\Item;
-use App\Models\Item\ItemFields;
+use App\Services\Item\GetItemFilterFieldsService;
+use App\Services\Item\ListItemsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class LandingController extends Controller
 {
-    public function getItems(Request $request): JsonResponse
+    public function getItems(Request $request, ListItemsService $listItem): JsonResponse
     {
-        $items = new ItemList($request->collect());
-        $itemList = [
-            'items' => $items->getItems()
-        ];
-        return $this->sendResponse($itemList);
+        return $this->sendResponse([
+            'items' => $listItem->execute($request->collect()),
+        ]);
     }
 
     public function getSingleItem(Item $item): JsonResponse
@@ -27,14 +24,10 @@ class LandingController extends Controller
         ]);
     }
 
-    public function getFieldsToFilterItems(Request $request): JsonResponse
+    public function getFieldsToFilterItems(Request $request, GetItemFilterFieldsService $getItemFilterFields): JsonResponse
     {
-        $itemFilterFields = new ItemFilterFields($request->collect());
-        $finalFields = [
-            'cities' => $itemFilterFields->getCities(),
-            'locations' => $itemFilterFields->getLocations(),
-            'features' => $itemFilterFields->getFeatures(),
-        ];
-        return $this->sendResponse($finalFields);
+        return $this->sendResponse(
+            $getItemFilterFields->execute($request->collect())
+        );
     }
 }
