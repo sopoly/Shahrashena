@@ -9,10 +9,20 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
-    public function index(ListCitiesService $listCities): JsonResponse
+    public function __construct(private readonly ListCitiesService $listCities)
+    {
+
+    }
+    public function index(): JsonResponse
     {
         return $this->sendResponse([
-            'cities' => $listCities->execute(),
+            'cities' => $this->listCities->execute(),
+        ]);
+    }
+    public function show(City $city): JsonResponse
+    {
+        return $this->sendResponse([
+            'city' => $city,
         ]);
     }
 }

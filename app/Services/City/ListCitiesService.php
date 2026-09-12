@@ -10,8 +10,6 @@ final class ListCitiesService
 {
     public function execute(): ?ECollection
     {
-        return City::query()
-            ->orderBy(CityFields::TITLE)
-            ->get();
+        return City::query()->orderBy(CityFields::TITLE)->get();
     }
 }
