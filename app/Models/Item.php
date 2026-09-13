@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ItemFeature\ItemFeatureFields;
+use App\Models\ItemReview\ItemReviewFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,11 +31,11 @@ class Item extends Model
         return $this->belongsTo(Location::class, 'location_id');
     }
     /*
-    /TDOD: Two buisiness constraints: 1. An item can have a feature belonging to its category only.
-    /2. An item can only reference a ;ocatoon_id that belongs to its city_id. This is a business constraint and should be enforced in the application layer.
+    /TDOD: Two business constraints: 1. An item can have a feature belonging to its category only.
+    /2. An item can only reference a location_id that belongs to its city_id. This is a business constraint and should be enforced in the application layer.
     / Remember to handle it using Request validation and not in the database layer. The database layer should only enforce referential integrity.
     */
-    
+
 //    public function owner(): BelongsTo
 //    {
 //        //
@@ -46,6 +47,10 @@ class Item extends Model
     public function itemFeatures(): HasMany
     {
         return $this->hasMany(ItemFeature::class, 'item_id');
+    }
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ItemReview::class, ItemReviewFields::ITEM_ID);
     }
     public function features(): BelongsToMany
     {
