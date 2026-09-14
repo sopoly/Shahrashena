@@ -48,9 +48,7 @@ class ItemDetailsForm
                             ->label('Feature')
                             ->options(function (Get $get): array {
                                 $categoryId = $get('../../'.ItemFields::CATEGORY_ID);
-                                if (blank($categoryId)) {
-                                    return [];
-                                }
+                                if (blank($categoryId)) return [];
 
                                 return CoreCategoryFeature::query()
                                     ->where(CategoryFeatureFields::CATEGORY_ID, $categoryId)
