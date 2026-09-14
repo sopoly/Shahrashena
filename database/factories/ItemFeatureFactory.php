@@ -9,6 +9,7 @@ use App\Models\Item\ItemFields;
 use App\Models\ItemFeature\ItemFeatureFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Query\JoinClause;
+use LogicException;
 
 /**
  * @extends Factory<ItemFeature>
@@ -50,7 +51,7 @@ class ItemFeatureFactory extends Factory
             ]);
 
         if ($pair === null) {
-            throw new \LogicException('No unused item-feature pairs are available.');
+            throw new LogicException('No unused item-feature pairs are available.');
         }
 
         return [
@@ -58,21 +59,5 @@ class ItemFeatureFactory extends Factory
             ItemFeatureFields::FEATURE_ID => $pair->feature_id,
             ItemFeatureFields::FEATURE_VALUE => null,
         ];
-
-        // $item = Item::query()
-        //     ->inRandomOrder()
-        //     ->first([ItemFields::ID, ItemFields::CATEGORY_ID]);
-
-        // return [
-        //     ItemFeatureFields::ITEM_ID => $item?->{ItemFields::ID},
-        //     ItemFeatureFields::FEATURE_ID => $item
-        //         ? CoreCategoryFeature::query()
-        //             ->where(CategoryFeaturefields::CATEGORY_ID, $item->{ItemFields::CATEGORY_ID})
-        //             ->inRandomOrder()
-        //             ->value(CategoryFeaturefields::ID)
-        //         : null,
-        //     ItemFeatureFields::FEATURE_VALUE => null,
-        // ];
-
     }
 }

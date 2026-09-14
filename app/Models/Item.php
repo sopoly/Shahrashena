@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ItemFeature\ItemFeatureFields;
+use App\Models\ItemInformation\ItemInformationFields;
 use App\Models\ItemReview\ItemReviewFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,8 @@ class Item extends Model
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory;
 
+    public mixed $item_id;
+    public mixed $feature_id;
     protected $guarded = [];
     public $timestamps = false;
 
@@ -48,15 +51,18 @@ class Item extends Model
     {
         return $this->hasMany(ItemFeature::class, 'item_id');
     }
-    public function reviews(): HasMany
-    {
-        return $this->hasMany(ItemReview::class, ItemReviewFields::ITEM_ID);
-    }
     public function features(): BelongsToMany
     {
         return $this->belongsToMany(CoreCategoryFeature::class, ItemFeatureFields::TABLE, ItemFeatureFields::ITEM_ID, ItemFeatureFields::FEATURE_ID)
             ->using(ItemFeature::class)
             ->withPivot(ItemFeatureFields::FEATURE_VALUE);
     }
-
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ItemReview::class, ItemReviewFields::ITEM_ID);
+    }
+    public function informations(): HasMany
+    {
+        return $this->hasMany(ItemInformation::class, ItemInformationFields::ITEM_ID);
+    }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Item;
+use App\Models\Item\ItemFields;
 use App\Models\ItemReview\ItemReviewFields;
 use App\Models\ItemReview;
 use App\Models\User;
@@ -21,7 +22,7 @@ class ItemReviewFactory extends Factory
      */
     public function definition(): array
     {
-        $itemId = Item::query()->inRandomOrder()->value(ItemReviewFields::ID);
+        $itemId = Item::query()->inRandomOrder()->value(ItemFields::ID);
         $senderId = User::query()->inRandomOrder()->value(UserFields::ID);
 
         return [

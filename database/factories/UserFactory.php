@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\User\UserFields;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,11 +26,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            UserFields::NAME => fake()->name(),
+            UserFields::EMAIL => fake()->unique()->safeEmail(),
+            UserFields::EMAIL_VERIFIED_AT => now(),
+            UserFields::PASSWORD => static::$password ??= Hash::make('password'),
+            UserFields::REMEMBER_TOKEN => Str::random(10),
         ];
     }
 

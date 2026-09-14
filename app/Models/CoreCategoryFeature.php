@@ -19,10 +19,13 @@ class CoreCategoryFeature extends Model
 
     public $timestamps = false;
 
-    protected $casts = [
-        CategoryFeatureFields::TYPE => FeatureType::class,
-        CategoryFeatureFields::AVAILABLE_CHOICES => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            CategoryFeatureFields::TYPE => FeatureType::class,
+            CategoryFeatureFields::AVAILABLE_CHOICES => 'array',
+        ];
+    }
 
     public function category(): BelongsTo
     {

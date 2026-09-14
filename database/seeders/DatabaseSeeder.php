@@ -26,9 +26,10 @@ class DatabaseSeeder extends Seeder
 //            LocationSeeder::class,
 //            CoreCategoryFeatureSeeder::class,
 //            ItemSeeder::class,
-            ItemReviewSeeder::class,
+//            ItemReviewSeeder::class,
 //            ItemFeatureSeeder::class,
 //            ItemSocialAccountSeeder::class,
+            ItemInformationSeeder::class,
         ]);
     }
 }
