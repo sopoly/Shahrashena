@@ -31,6 +31,7 @@ Route::prefix('v1')->group(function () {
     Route::prefix('/items')->group(function () {
         Route::get('/{item}', [LandingController::class, 'getSingleItem']);
         Route::get('{item}/reviews', [ItemReviewController::class, 'index']);
+        Route::post('{item}/reviews', [ItemReviewController::class, 'store']);
         Route::get('{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
 //    Route::prefix('/category/items')->group(function () {

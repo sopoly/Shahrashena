@@ -9,6 +9,8 @@ Route::get('/', function () {
 
 
 Route::get('/hi', function () {
-    $item = Item::find(1);
-    dd($item->itemFeatures()->with('feature')->get('feature_value'));
+    $itemInformation = \App\Models\ItemInformation::find(1);
+    dd($itemInformation->item()->pluck('title')->first());
 });
+
+// Route::get('/test', [ItemList::class, 'getItems']);
