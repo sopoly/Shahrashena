@@ -21,7 +21,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/{city}/locations', [LocationController::class, 'index']);
     });
     Route::prefix('/categories')->group(function () {
-        Route::get('/', [coreCategoryController::class, 'index']);
+        Route::get('/', [CoreCategoryController::class, 'index']);
         Route::prefix('/{category}/items')->group(function () {
             Route::get('', [LandingController::class, 'getItems']);
             Route::get('/fields-to-filter', [LandingController::class, 'getFieldsToFilterItems']);
