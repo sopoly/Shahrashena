@@ -17,7 +17,7 @@ final class ListItemsService
             ->whereBelongsTo($category, 'category')
             ->with('features')
             ->when(
-                $fields->get(ItemFields::CITY_ID), fn ($q, $val) => $q->whereIn(ItemFields::CITY_ID, (array) $val))
+                $fields->get(ItemFields::CITY_ID), fn ($q, $val) => $q->whereIn(ItemFields::CITY_ID, $val))
             ->when(
                 $fields->get(ItemFields::LOCATION_ID), fn ($q, $val) => $q->whereIn(ItemFields::LOCATION_ID, (array) $val))
             ->when(
