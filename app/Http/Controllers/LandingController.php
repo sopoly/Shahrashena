@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CoreCategory;
 use App\Models\Item;
 use App\Services\Item\GetItemFilterFieldsService;
 use App\Services\Item\ListItemsService;
@@ -10,10 +11,10 @@ use Illuminate\Http\Request;
 
 class LandingController extends Controller
 {
-    public function getItems(Request $request, ListItemsService $listItem): JsonResponse
+    public function getItems(Request $request, ListItemsService $listItem, CoreCategory $category): JsonResponse
     {
         return $this->sendResponse([
-            'items' => $listItem->execute($request->collect()),
+            'items' => $listItem->execute($category, $request->collect()),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CoreCategoryController;
+use App\Http\Controllers\ItemReviewController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
@@ -25,8 +26,12 @@ Route::prefix('v1')->group(function () {
         Route::prefix('/{category}/items')->group(function () {
             Route::get('', [LandingController::class, 'getItems']);
             Route::get('/fields-to-filter', [LandingController::class, 'getFieldsToFilterItems']);
-            Route::get('/{item}', [LandingController::class, 'getSingleItem']);
         });
+    });
+    Route::prefix('/items')->group(function () {
+        Route::get('/{item}', [LandingController::class, 'getSingleItem']);
+        Route::get('{item}/reviews', [ItemReviewController::class, 'index']);
+        Route::get('{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
 //    Route::prefix('/category/items')->group(function () {
 //        Route::get('', [LandingController::class, 'getItems']);
