@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\CoreCategoryController;
 use App\Http\Controllers\ItemReviewController;
@@ -34,11 +35,11 @@ Route::prefix('v1')->group(function () {
         Route::post('{item}/reviews', [ItemReviewController::class, 'store']);
         Route::get('{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
-//    Route::prefix('/category/items')->group(function () {
-//        Route::get('', [LandingController::class, 'getItems']);
-//        Route::get('/fields-to-filter', [LandingController::class, 'getFieldsToFilterItems']);
-//        Route::get('/{item}', [LandingController::class, 'getSingleItem']);
-//    });
+    Route::get('/register', [AuthController::class, 'register']);
+    Route::get('/login', [AuthController::class, 'login']);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 });
 
 
