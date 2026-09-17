@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\ItemReview;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreItemReviewRequest extends FormRequest
+class UpdateItemReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -23,8 +23,7 @@ class StoreItemReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stars' => ['required', 'integer', 'min:1', 'max:5'],
-            'content' => ['required', 'string', 'min:3', 'max:2000'],
+            //
         ];
     }
 }
