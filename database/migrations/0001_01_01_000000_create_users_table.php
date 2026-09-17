@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create(UserFields::TABLE, function (Blueprint $table) {
             $table->id();
             $table->string(UserFields::NAME)->nullable();
-            $table->string(UserFields::EMAIL)->unique();
+            $table->string(UserFields::EMAIL)->unique()->nullable();
             $table->string(UserFields::PASSWORD)->nullable();
             $table->timestamp(UserFields::EMAIL_VERIFIED_AT)->nullable();
             $table->string(UserFields::PHONE_NUMBER)->nullable();
