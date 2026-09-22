@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Requests\ItemReview\ItemReview\Auth;
+namespace App\Http\Requests\Auth;
 
+use App\Models\RefreshToken\RefreshTokenFields;
+use App\Models\User\UserFields;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +14,7 @@ class VerifyOtpRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +25,9 @@ class VerifyOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            UserFields::PHONE_NUMBER => ['required', 'string'],
+            UserFields::OTP_CODE => ['required', 'string', 'size:6'],
+            RefreshTokenFields::DEVICE_ID => ['nullable', 'string', 'max:255'],
         ];
     }
 }

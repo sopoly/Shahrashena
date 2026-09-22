@@ -9,10 +9,6 @@ use App\Http\Controllers\LocationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 /*
  * TODO: Route::get('/category/{category:slug}/item')
  */
@@ -35,10 +31,13 @@ Route::prefix('v1')->group(function () {
         Route::post('{item}/reviews', [ItemReviewController::class, 'store']);
         Route::get('{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
-    Route::get('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'login']);
+    Route::post('send-otp', [AuthController::class, 'sendOtp']);
+    Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/complete-profile');
     });
 });
 

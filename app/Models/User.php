@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\ItemReview\ItemReviewFields;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\RefreshToken\RefreshTokenFields;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -11,11 +12,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @method static firstOrCreate(string[] $array)
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
 
     /**
@@ -50,5 +55,9 @@ class User extends Authenticatable
     public function reviews(): HasMany
     {
         return $this->hasMany(ItemReview::class, ItemReviewFields::SENDER_ID);
+    }
+    public function refreshToken(): HasMany
+    {
+        return $this->hasMany(RefreshToken::class, RefreshTokenFields::USER_ID);
     }
 }

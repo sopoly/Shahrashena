@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Http\Requests\ItemReview\ItemReview\Auth;
+namespace App\Http\Requests\Auth;
 
+use App\Models\RefreshToken\RefreshTokenFields;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class RefreshTokenRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +24,8 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            RefreshTokenFields::TOKEN => ['required', 'string'],
+            RefreshTokenFields::DEVICE_ID => ['nullable', 'string', 'max:255'],
         ];
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\ItemReview\ItemReview\Auth;
+namespace App\Http\Requests\Auth;
 
+use App\Models\User\UserFields;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -12,7 +13,7 @@ class SendOtpRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +24,7 @@ class SendOtpRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            UserFields::PHONE_NUMBER => ['required', 'string']
         ];
     }
 }

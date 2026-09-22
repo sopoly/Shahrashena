@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    public function sendResponse(?array $data = [], $message = null): JsonResponse
+    public function sendResponse(?array $data = [], $message = null, int $httpCode = 200): JsonResponse
     {
         if (!is_array($data)) $data = [];
         if ($message) $message = __($message);
@@ -18,6 +18,6 @@ class Controller extends BaseController
             'success' => true,
             'message' => $message,
         ], $data);
-        return response()->json($response);
+        return response()->json($response, $httpCode);
     }
 }
