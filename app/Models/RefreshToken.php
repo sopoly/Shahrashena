@@ -10,7 +10,7 @@ class RefreshToken extends Model
 {
     protected $table = RefreshTokenFields::TABLE;
 
-
+    protected $guarded = [];
 
     protected $casts = [
         RefreshTokenFields::EXPIRES_AT => 'datetime',
@@ -23,6 +23,6 @@ class RefreshToken extends Model
 
     public function isExpired(): bool
     {
-        return $this->{RefreshTokenFields::EXPIRES_AT}->isPast();
+        return $this->getAttribute(RefreshTokenFields::EXPIRES_AT)->isPast();
     }
 }

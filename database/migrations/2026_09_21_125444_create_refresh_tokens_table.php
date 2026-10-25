@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId(RefreshTokenFields::USER_ID)->constrained(UserFields::TABLE)->cascadeOnDelete();
             $table->string(RefreshTokenFields::DEVICE_ID)->default('default');
-            $table->string(RefreshTokenFields::TOKEN)->unique();
+            $table->string(RefreshTokenFields::TOKEN, 64)->unique();
             $table->timestamp(RefreshTokenFields::EXPIRES_AT);
             $table->timestamps();
             $table->unique([RefreshTokenFields::USER_ID, RefreshTokenFields::DEVICE_ID]);

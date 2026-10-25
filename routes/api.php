@@ -14,27 +14,27 @@ use Illuminate\Support\Facades\Route;
  */
 Route::prefix('v1')->group(function () {
     Route::prefix('/cities')->group(function () {
-        Route::get('', [CityController::class, 'index']);
-        Route::get('{city}', [CityController::class, 'show']);
+        Route::get('/', [CityController::class, 'index']);
+        Route::get('/{city}', [CityController::class, 'show']);
         Route::get('/{city}/locations', [LocationController::class, 'index']);
     });
     Route::prefix('/categories')->group(function () {
         Route::get('/', [CoreCategoryController::class, 'index']);
-        Route::prefix('/{category}/items')->group(function () {
-            Route::get('', [LandingController::class, 'getItems']);
+        Route::prefix('/{category:slug}/items')->group(function () {
+            Route::get('/', [LandingController::class, 'getItems']);
             Route::get('/fields-to-filter', [LandingController::class, 'getFieldsToFilterItems']);
         });
     });
     Route::prefix('/items')->group(function () {
         Route::get('/{item}', [LandingController::class, 'getSingleItem']);
-        Route::get('{item}/reviews', [ItemReviewController::class, 'index']);
-        Route::post('{item}/reviews', [ItemReviewController::class, 'store']);
-        Route::get('{item}/reviews/{review}', [ItemReviewController::class, 'show']);
+        Route::get('/{item}/reviews', [ItemReviewController::class, 'index']);
+        Route::post('/{item}/reviews', [ItemReviewController::class, 'store']);
+        Route::get('/{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
     Route::get('/login', [AuthController::class, 'login']);
-    Route::post('send-otp', [AuthController::class, 'sendOtp']);
-    Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/complete-profile');

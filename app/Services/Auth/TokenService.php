@@ -5,34 +5,32 @@ namespace App\Services\Auth;
 use App\Exceptions\InvalidRefreshTokenException;
 use App\Models\User;
 
-class TokenService
+readonly class TokenService
 {
     public function __construct(
-        private readonly AccessTokenService $accessTokenService,
-        private readonly RefreshTokenService $refreshTokenService,
-        private readonly TokenResponseFormatter $responseFormatter,
-    ) {
-    }
+        private AccessTokenService     $accessTokenService,
+        private RefreshTokenService    $refreshTokenService,
+        private TokenResponseFormatter $responseFormatter,
+    ) {}
 
     public function issueTokens(User $user, ?string $deviceId): array
     {
         $accessToken = $this->accessTokenService->issue($user, $deviceId);
-        $refreshToken = $this->refreshTokenService->issueOrRotate($user, $deviceId);
+        $refreshToken = $this->refreshTokenService->issue($user, $deviceId);
 
         return $this->responseFormatter->format($accessToken, $refreshToken);
     }
 
     /**
      * @throws InvalidRefreshTokenException
+     * @throws \Throwable
      */
     public function refreshTokens(string $refreshTokenPlain, ?string $deviceId): array
     {
-        $refreshResult = $this->refreshTokenService->validateAndRotate($refreshTokenPlain, $deviceId);
-        $user = $refreshResult['user'];
+        $rotated = $this->refreshTokenService->validateAndRotate($refreshTokenPlain, $deviceId);
 
-        $accessToken = $this->accessTokenService->issue($user, $deviceId);
-        $refreshToken = ['token' => $refreshResult['token'], 'expires_at' => $refreshResult['expires_at']];
+        $accessToken = $this->accessTokenService->issue($rotated->user, $deviceId);
 
-        return $this->responseFormatter->format($accessToken, $refreshToken);
+        return $this->responseFormatter->format($accessToken, $rotated->token);
     }
 }

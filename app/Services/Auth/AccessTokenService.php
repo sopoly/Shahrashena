@@ -2,28 +2,23 @@
 
 namespace App\Services\Auth;
 
-use App\Models\RefreshToken\RefreshTokenFields;
 use App\Models\User;
 
 class AccessTokenService
 {
     private const int TTL_MINUTES = 5;
+
     public function __construct(private readonly DeviceIdResolver $deviceIdResolver) {}
 
-    public function issue(User $user, ?string $deviceId = null): array
+    public function issue(User $user, ?string $deviceId = null): IssuedAccessToken
     {
         $deviceId = $this->deviceIdResolver->resolve($deviceId);
+        $expiresAt = now()->addMinutes(self::TTL_MINUTES);
 
         $user->tokens()->where('name', $deviceId)->delete();
 
-        $newToken = $user->createToken($deviceId);
-        $expiresAt = now()->addMinutes(self::TTL_MINUTES);
+        $newToken = $user->createToken($deviceId, ['*'], $expiresAt);
 
-        $newToken->accessToken->forceFill([RefreshTokenFields::EXPIRES_AT => $expiresAt])->save();
-
-        return [
-            'token' => $newToken->plainTextToken,
-            'expires_at' => $expiresAt->toDateTimeString(), //TODO: Check the format
-        ];
+        return new IssuedAccessToken($newToken->plainTextToken, $expiresAt);
     }
 }

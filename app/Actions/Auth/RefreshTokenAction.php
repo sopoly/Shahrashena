@@ -12,7 +12,7 @@ readonly class RefreshTokenAction
     ) {}
 
     /**
-     * @throws InvalidRefreshTokenException
+     * @throws InvalidRefreshTokenException|\Throwable
      */
     public function __invoke(string $refreshToken, ?string $deviceId): array
     {

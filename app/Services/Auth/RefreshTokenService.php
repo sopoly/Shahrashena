@@ -6,8 +6,9 @@ use App\Exceptions\InvalidRefreshTokenException;
 use App\Models\RefreshToken;
 use App\Models\RefreshToken\RefreshTokenFields;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Throwable as ThrowableAlias;
 
 class RefreshTokenService
 {
@@ -15,78 +16,63 @@ class RefreshTokenService
 
     public function __construct(private readonly DeviceIdResolver $deviceIdResolver) {}
 
+    public function issue(User $user, ?string $deviceId): IssuedRefreshToken
+    {
+        $issued = $this->generate();
+
+        RefreshToken::query()->updateOrCreate(
+            [
+                RefreshTokenFields::USER_ID => $user->id,
+                RefreshTokenFields::DEVICE_ID => $this->deviceIdResolver->resolve($deviceId),
+            ],
+            [
+                RefreshTokenFields::TOKEN => $this->hash($issued->plainToken),
+                RefreshTokenFields::EXPIRES_AT => $issued->expiresAt,
+            ],
+        );
+
+        return $issued;
+    }
+
     /**
-     * @param User $user
-     * @param string|null $deviceId
-     * @return array
+     * @throws InvalidRefreshTokenException|ThrowableAlias
      */
-    public function issueOrRotate(User $user, ?string $deviceId): array
+    public function validateAndRotate(string $plainToken, ?string $deviceId): RotatedRefreshToken
     {
         $deviceId = $this->deviceIdResolver->resolve($deviceId);
 
-        $existing = RefreshToken::query()
-            ->where(RefreshTokenFields::USER_ID, $user->id)
-            ->where(RefreshTokenFields::DEVICE_ID, $deviceId)
-            ->first();
+        return DB::transaction(function () use ($plainToken, $deviceId): RotatedRefreshToken {
+            $record = RefreshToken::query()
+                ->where(RefreshTokenFields::DEVICE_ID, $deviceId)
+                ->where(RefreshTokenFields::TOKEN, $this->hash($plainToken))
+                ->lockForUpdate()
+                ->first();
 
-        if ($existing) return $this->rotate($existing);
+            if (! $record || $record->isExpired()) {
+                throw new InvalidRefreshTokenException();
+            }
 
-        return $this->create($user->id, $deviceId);
+            $issued = $this->generate();
+
+            $record->update([
+                RefreshTokenFields::TOKEN => $this->hash($issued->plainToken),
+                RefreshTokenFields::EXPIRES_AT => $issued->expiresAt,
+            ]);
+
+            return new RotatedRefreshToken($record->user, $issued);
+        });
     }
 
-    /**
-     * @throws InvalidRefreshTokenException
-     */
-    public function validateAndRotate(string $plainToken, ?string $deviceId): array
+    private function generate(): IssuedRefreshToken
     {
-        $deviceId = $this->deviceIdResolver->resolve($deviceId);
-
-        $record = RefreshToken::query()->where(RefreshTokenFields::DEVICE_ID, $deviceId)->first();
-
-        if (! $record || ! Hash::check($plainToken, $record->{RefreshTokenFields::TOKEN}) || $record->isExpired()) {
-            throw new InvalidRefreshTokenException();
-        }
-
-        return [
-            'user' => $record->user,
-            ...$this->rotate($record),
-        ];
+        return new IssuedRefreshToken(
+            Str::random(64),
+            now()->addDays(self::TTL_DAYS),
+        );
     }
 
-    /**
-     * @param int $userId
-     * @param string $deviceId
-     * @return array
-     */
-    private function create(int $userId, string $deviceId): array
+    private function hash(string $plainToken): string
     {
-        $plainToken = Str::random(64);
-        $expiresAt = now()->addDays(self::TTL_DAYS);
-
-        RefreshToken::query()->create([
-            RefreshTokenFields::USER_ID => $userId,
-            RefreshTokenFields::DEVICE_ID => $deviceId,
-            RefreshTokenFields::TOKEN => Hash::make($plainToken),
-            RefreshTokenFields::EXPIRES_AT => $expiresAt,
-        ]);
-
-        return ['token' => $plainToken, 'expires_at' => $expiresAt];
-    }
-
-    /**
-     * @param RefreshToken $record
-     * @return array
-     */
-    private function rotate(RefreshToken $record): array
-    {
-        $plainToken = Str::random(64);
-        $expiresAt = now()->addDays(self::TTL_DAYS);
-
-        $record->update([
-            RefreshTokenFields::TOKEN => Hash::make($plainToken),
-            RefreshTokenFields::EXPIRES_AT => $expiresAt,
-        ]);
-
-        return ['token' => $plainToken, 'expires_at' => $expiresAt];
+        return hash_hmac('sha256', $plainToken, (string) config('app.key'));
     }
 }

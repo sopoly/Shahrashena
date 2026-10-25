@@ -18,9 +18,9 @@ readonly class LoginAction
     {
         $user = User::query()->where(UserFields::EMAIL, $email)->first();
 
-        $hasUsablePassword = $user && $user->{UserFields::PASSWORD};
+        $hasUsablePassword = $user && $user->getAttribute(UserFields::PASSWORD);
 
-        if (! $hasUsablePassword || ! Hash::check($password, $user->{UserFields::PASSWORD})) {
+        if (! $hasUsablePassword || ! Hash::check($password, $user->getAttribute(UserFields::PASSWORD))) {
             throw ValidationException::withMessages([
                 UserFields::EMAIL => ['ایمیل یا رمز عبور اشتباه است.'],
             ]);
@@ -28,6 +28,6 @@ readonly class LoginAction
 
         $tokens = $this->tokenService->issueTokens($user, $deviceId);
 
-        return array_merge($tokens, ['user' => $user]);
+        return [...$tokens, 'user' => $user];
     }
 }

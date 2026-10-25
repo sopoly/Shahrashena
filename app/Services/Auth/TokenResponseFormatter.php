@@ -4,13 +4,13 @@ namespace App\Services\Auth;
 
 class TokenResponseFormatter
 {
-    public function format(array $accessToken, array $refreshToken): array
+    public function format(IssuedAccessToken $accessToken, IssuedRefreshToken $refreshToken): array
     {
         return [
-            'access_token' => $accessToken['token'],
-            'access_token_expires_at' => $accessToken['expires_at']->toIso8601String(),
-            'refresh_token' => $refreshToken['token'],
-            'refresh_token_expires_at' => $refreshToken['expires_at']->toIso8601String(),
+            'access_token' => $accessToken->plainToken,
+            'access_token_expires_at' => $accessToken->expiresAt->toIso8601String(),
+            'refresh_token' => $refreshToken->plainToken,
+            'refresh_token_expires_at' => $refreshToken->expiresAt->toIso8601String(),
         ];
     }
 }
