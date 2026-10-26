@@ -26,7 +26,7 @@ class RefreshTokenService
                 RefreshTokenFields::DEVICE_ID => $this->deviceIdResolver->resolve($deviceId),
             ],
             [
-                RefreshTokenFields::TOKEN => $this->hash($issued->plainToken),
+                RefreshTokenFields::REFRESH_TOKEN => $this->hash($issued->plainToken),
                 RefreshTokenFields::EXPIRES_AT => $issued->expiresAt,
             ],
         );
@@ -44,7 +44,7 @@ class RefreshTokenService
         return DB::transaction(function () use ($plainToken, $deviceId): RotatedRefreshToken {
             $record = RefreshToken::query()
                 ->where(RefreshTokenFields::DEVICE_ID, $deviceId)
-                ->where(RefreshTokenFields::TOKEN, $this->hash($plainToken))
+                ->where(RefreshTokenFields::REFRESH_TOKEN, $this->hash($plainToken))
                 ->lockForUpdate()
                 ->first();
 
@@ -55,12 +55,19 @@ class RefreshTokenService
             $issued = $this->generate();
 
             $record->update([
-                RefreshTokenFields::TOKEN => $this->hash($issued->plainToken),
+                RefreshTokenFields::REFRESH_TOKEN => $this->hash($issued->plainToken),
                 RefreshTokenFields::EXPIRES_AT => $issued->expiresAt,
             ]);
 
             return new RotatedRefreshToken($record->user, $issued);
         });
+    }
+
+    public function revokeByPlainToken(string $plainToken): void
+    {
+        RefreshToken::query()
+            ->where(RefreshTokenFields::REFRESH_TOKEN, $this->hash($plainToken))
+            ->delete();
     }
 
     private function generate(): IssuedRefreshToken

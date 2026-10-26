@@ -12,20 +12,17 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RefreshTokenRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Auth\AuthResource;
+use App\Http\Resources\Auth\TokenPairResource;
 use App\Models\RefreshToken\RefreshTokenFields;
 use App\Models\User\UserFields;
+use App\Services\Auth\AuthResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Random\RandomException;
 
 class AuthController extends Controller
 {
-    /**
-     * @param LoginRequest $request
-     * @param LoginAction $action
-     * @return JsonResponse
-     */
     public function login(LoginRequest $request, LoginAction $action): JsonResponse
     {
         $validated = $request->validated();
@@ -36,7 +33,7 @@ class AuthController extends Controller
             $validated[RefreshTokenFields::DEVICE_ID] ?? null,
         );
 
-        return $this->sendResponse($this->tokenPayload($result));
+        return $this->authResponse($result);
     }
 
     /**
@@ -56,27 +53,26 @@ class AuthController extends Controller
         $result = $action(
             $validated[UserFields::PHONE_NUMBER],
             $validated[UserFields::OTP_CODE],
-            $validated[RefreshTokenFields::DEVICE_ID] ?? null
+            $validated[RefreshTokenFields::DEVICE_ID] ?? null,
         );
 
-        $payload = array_merge($this->tokenPayload($result), [
-            'is_new_user' => $result['is_new_user'],
-        ]);
-
-        return $this->sendResponse($payload, null, $result['is_new_user'] ? 201 : 200);
+        return $this->authResponse($result, $result->isNewUser ? 201 : 200);
     }
 
+    /**
+     * @throws InvalidRefreshTokenException
+     * @throws \Throwable
+     */
     public function refresh(RefreshTokenRequest $request, RefreshTokenAction $action): JsonResponse
     {
         $validated = $request->validated();
 
-        try {
-            $result = $action($validated['refresh_token'], $validated['device_id'] ?? null);
-        } catch (InvalidRefreshTokenException $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 401);
-        }
+        $tokens = $action(
+            $validated[RefreshTokenFields::REFRESH_TOKEN],
+            $validated[RefreshTokenFields::DEVICE_ID] ?? null,
+        );
 
-        return $this->sendResponse($result);
+        return $this->sendResponse((new TokenPairResource($tokens))->resolve());
     }
 
     public function logout(Request $request, LogoutAction $action): JsonResponse
@@ -86,14 +82,8 @@ class AuthController extends Controller
         return $this->sendResponse([], 'خروج با موفقیت انجام شد.');
     }
 
-    private function tokenPayload(array $result): array
+    private function authResponse(AuthResult $result, int $httpCode = 200): JsonResponse
     {
-        return [
-            'user' => new UserResource($result['user']),
-            'access_token' => $result['access_token'],
-            'access_token_expires_at' => $result['access_token_expires_at'],
-            'refresh_token' => $result['refresh_token'],
-            'refresh_token_expires_at' => $result['refresh_token_expires_at'],
-        ];
+        return $this->sendResponse((new AuthResource($result))->resolve(), null, $httpCode);
     }
 }

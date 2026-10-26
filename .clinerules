@@ -1,0 +1,41 @@
+# Project Rules
+
+## Project
+- Laravel backend for a local-business directory (starting with cafes). It is API-only: no Blade views.
+- The frontend is a separate Next.js app that consumes this API.
+- The admin panel is built with Filament.
+- Users can use the public API as guests. Authentication, when used, is OTP-based (no passwords).
+- Solo project. Keep solutions simple and maintainable; avoid over-engineering.
+
+## Coding standards
+- Follow SOLID principles and Laravel conventions. Write code as a senior Laravel developer would.
+- Keep controllers thin. Put validation in Form Requests, business logic in Services/Actions, and API output in API Resources.
+- Use Eloquent relationships and eager loading. Avoid N+1 queries.
+- Use strict types, type hints, and return types everywhere.
+- Controllers live directly in App\Http\Controllers (no Api sub-namespace).
+- Keep existing descriptive method names (getItems, getSingleItem, ...). Do not rename them to RESTful names unless asked.
+- Identify categories in URLs by slug, never by numeric id.
+- Column names are kept as constants in dedicated Fields classes (e.g. ItemInformationFields). Do not put form-building logic there.
+
+## Filament
+- Keep resource classes thin. Split each form section into its own schema class (e.g. ItemDetailsForm, LocationForm) and compose them in ItemForm.
+
+## Docker (the project runs in containers)
+- Never run php, composer, artisan, or npm directly on the host.
+- Run commands inside the containers, for example:
+  - docker compose exec app php artisan <command>
+  - docker compose exec app composer <command>
+- Services: app, webserver (nginx), vite, mysql, redis, queue.
+- Never run destructive commands (migrate:fresh, db:wipe, docker compose down -v, rm -rf) without asking me first.
+
+## Safety
+- Never read, print, or edit .env or any file containing secrets.
+- Do not install new packages without asking first and explaining why.
+- Do not run git commit or git push. I do that myself.
+
+## Workflow
+- Before changing code, read the related files first. Do not guess names, methods, or table columns.
+- If a request is ambiguous, ask one short clarifying question before writing code.
+- Make small, focused changes. After each change, give a short summary of what changed and why.
+- If you are unsure a package or Laravel feature exists, say so instead of inventing it.
+- Reply in the same language I write in (Persian or English). Keep code, comments, and identifiers in English.

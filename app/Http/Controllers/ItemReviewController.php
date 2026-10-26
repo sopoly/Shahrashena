@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ItemReview\ItemReview\StoreItemReviewRequest;
-use App\Http\Requests\ItemReview\ItemReview\UpdateItemReviewRequest;
+use App\Http\Requests\ItemReview\StoreItemReviewRequest;
+use App\Http\Requests\ItemReview\UpdateItemReviewRequest;
 use App\Models\Item;
 use App\Models\ItemReview;
 use App\Models\ItemReview\ItemReviewFields;

@@ -24,7 +24,7 @@ class RefreshTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            RefreshTokenFields::TOKEN => ['required', 'string'],
+            RefreshTokenFields::REFRESH_TOKEN => ['required', 'string'],
             RefreshTokenFields::DEVICE_ID => ['nullable', 'string', 'max:255'],
         ];
     }

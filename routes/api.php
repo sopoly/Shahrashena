@@ -31,10 +31,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/{item}/reviews', [ItemReviewController::class, 'store']);
         Route::get('/{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
-    Route::get('/login', [AuthController::class, 'login']);
-    Route::post('/send-otp', [AuthController::class, 'sendOtp']);
-    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
+    Route::post('/send-otp', [AuthController::class, 'sendOtp'])->middleware('throttle:3,1');
+    Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:5,1');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('throttle:10,1');
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/complete-profile');

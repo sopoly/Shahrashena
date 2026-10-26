@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AccessTokenService
 {
@@ -20,5 +21,10 @@ class AccessTokenService
         $newToken = $user->createToken($deviceId, ['*'], $expiresAt);
 
         return new IssuedAccessToken($newToken->plainTextToken, $expiresAt);
+    }
+
+    public function deviceIdOf(PersonalAccessToken $token): string
+    {
+        return $token->name;
     }
 }
