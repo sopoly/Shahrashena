@@ -63,10 +63,11 @@ class RefreshTokenService
         });
     }
 
-    public function revokeByPlainToken(string $plainToken): void
+    public function revoke(User $user, string $deviceId): void
     {
         RefreshToken::query()
-            ->where(RefreshTokenFields::REFRESH_TOKEN, $this->hash($plainToken))
+            ->where(RefreshTokenFields::USER_ID, $user->getKey())
+            ->where(RefreshTokenFields::DEVICE_ID, $deviceId)
             ->delete();
     }
 
