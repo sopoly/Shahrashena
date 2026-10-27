@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
 //            'email' => 'test@example.com',
 //        ]);
 
+        User::factory()->count(10)->create();
+
         $this->call([
 //            CitySeeder::class,
 //            CoreCategorySeeder::class,
@@ -27,9 +29,9 @@ class DatabaseSeeder extends Seeder
 //            CoreCategoryFeatureSeeder::class,
 //            ItemSeeder::class,
 //            ItemReviewSeeder::class,
-//            ItemFeatureSeeder::class,
+            ItemFeatureSeeder::class,
 //            ItemSocialAccountSeeder::class,
-            ItemInformationSeeder::class,
+//            ItemInformationSeeder::class,
         ]);
     }
 }

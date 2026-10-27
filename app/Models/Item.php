@@ -11,13 +11,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property mixed $feature_id
+ * @property mixed $item_id
+ */
 class Item extends Model
 {
     /** @use HasFactory<\Database\Factories\ItemFactory> */
     use HasFactory;
 
-    public mixed $item_id;
-    public mixed $feature_id;
     protected $guarded = [];
     public $timestamps = false;
 

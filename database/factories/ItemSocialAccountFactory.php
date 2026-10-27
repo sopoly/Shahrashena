@@ -25,10 +25,11 @@ class ItemSocialAccountFactory extends Factory
                 ->inRandomOrder()
                 ->value(ItemFields::ID),
             SocialAccountFields::SOCIAL_SLUG => fake()->randomElement([
+                'facebook',
                 'instagram',
                 'telegram',
-                'x',
-                'linkedin',
+                'whatsapp',
+                'x'
             ]),
             SocialAccountFields::ACCOUNT_ID => fake()->userName(),
         ];

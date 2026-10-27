@@ -52,6 +52,14 @@ return [
 
     'channels' => [
 
+        'sms' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/sms'),
+            'level' => env('LOG_SMS_LEVEL', 'info'),
+            'days' => env('LOG_SMS_DAYS', 10),
+            'replace_placeholders' => true,
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),

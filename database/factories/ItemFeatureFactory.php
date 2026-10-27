@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ItemFeature;
-use App\Models\CoreCategoryFeature\CategoryFeaturefields;
+use App\Models\CoreCategoryFeature\CategoryFeatureFields;
 use App\Models\Item;
 use App\Models\Item\ItemFields;
 use App\Models\ItemFeature\ItemFeatureFields;
@@ -25,10 +25,10 @@ class ItemFeatureFactory extends Factory
     {
         $pair = Item::query()
             ->join(
-                CategoryFeaturefields::TABLE,
+                CategoryFeatureFields::TABLE,
                 ItemFields::TABLE.'.'.ItemFields::CATEGORY_ID,
                 '=',
-                CategoryFeaturefields::TABLE.'.'.CategoryFeaturefields::CATEGORY_ID,
+                CategoryFeatureFields::TABLE.'.'.CategoryFeatureFields::CATEGORY_ID,
             )
             ->leftJoin(ItemFeatureFields::TABLE, function (JoinClause $join): void {
                 $join
@@ -38,7 +38,7 @@ class ItemFeatureFactory extends Factory
                         ItemFeatureFields::TABLE.'.'.ItemFeatureFields::ITEM_ID,
                     )
                     ->on(
-                        CategoryFeaturefields::TABLE.'.'.CategoryFeaturefields::ID,
+                        CategoryFeatureFields::TABLE.'.'.CategoryFeatureFields::ID,
                         '=',
                         ItemFeatureFields::TABLE.'.'.ItemFeatureFields::FEATURE_ID,
                     );
