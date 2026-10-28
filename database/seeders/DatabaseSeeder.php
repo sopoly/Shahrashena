@@ -23,15 +23,15 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(10)->create();
 
         $this->call([
-//            CitySeeder::class,
-//            CoreCategorySeeder::class,
-//            LocationSeeder::class,
-//            CoreCategoryFeatureSeeder::class,
-//            ItemSeeder::class,
-//            ItemReviewSeeder::class,
+            CitySeeder::class,
+            CoreCategorySeeder::class,
+            LocationSeeder::class,
+            CoreCategoryFeatureSeeder::class,
+            ItemSeeder::class,
+            ItemReviewSeeder::class,
             ItemFeatureSeeder::class,
-//            ItemSocialAccountSeeder::class,
-//            ItemInformationSeeder::class,
+            ItemSocialAccountSeeder::class,
+            ItemInformationSeeder::class,
         ]);
     }
 }

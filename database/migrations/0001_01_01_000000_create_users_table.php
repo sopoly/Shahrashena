@@ -18,9 +18,7 @@ return new class extends Migration
             $table->string(UserFields::EMAIL)->unique()->nullable();
             $table->string(UserFields::PASSWORD)->nullable();
             $table->timestamp(UserFields::EMAIL_VERIFIED_AT)->nullable();
-            $table->string(UserFields::PHONE_NUMBER)->nullable();
-            $table->string(UserFields::OTP_CODE)->nullable();
-            $table->dateTime(UserFields::OTP_EXPIRE_AT)->nullable();
+            $table->string(UserFields::PHONE_NUMBER)->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

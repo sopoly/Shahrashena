@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             UserFields::EMAIL => $this->{UserFields::EMAIL},
             UserFields::PHONE_NUMBER => $this->{UserFields::PHONE_NUMBER},
             UserFields::CREATED_AT => $this->{UserFields::CREATED_AT},
+            UserFields::IS_PROFILE_COMPLETED => filled($this->{UserFields::NAME}),
         ];
     }
 }

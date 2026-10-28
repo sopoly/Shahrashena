@@ -7,18 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserFields extends FieldsClass
 {
-    const TABLE = 'users';
+    const string TABLE = 'users';
 
-    const ID = 'id';
-    const NAME = 'name';
-    const EMAIL = 'email';
-    const PASSWORD = 'password';
-    const EMAIL_VERIFIED_AT = 'email_verified_at';
-    const PHONE_NUMBER = 'phone_number';
-    const OTP_CODE = 'otp_code';
-    const OTP_EXPIRE_AT = 'otp_expired_at';
-    const REMEMBER_TOKEN = 'remember_token';
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    const string ID = 'id';
+    const string NAME = 'name';
+    const string EMAIL = 'email';
+    const string PASSWORD = 'password';
+    const string EMAIL_VERIFIED_AT = 'email_verified_at';
+    const string PHONE_NUMBER = 'phone_number';
+    const string IS_PROFILE_COMPLETED = 'is_profile_completed';
+    const string OTP_CODE = 'otp_code';
+    const string OTP_EXPIRE_AT = 'otp_expired_at';
+    const string REMEMBER_TOKEN = 'remember_token';
+    const string CREATED_AT = 'created_at';
+    const string UPDATED_AT = 'updated_at';
 
 }
