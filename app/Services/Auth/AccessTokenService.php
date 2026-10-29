@@ -23,6 +23,11 @@ class AccessTokenService
         return new IssuedAccessToken($newToken->plainTextToken, $expiresAt);
     }
 
+    public function revokeAllExcept(User $user, PersonalAccessToken $current): void
+    {
+        $user->tokens()->whereKeyNot($current->getKey())->delete();
+    }
+
     public function deviceIdOf(PersonalAccessToken $token): string
     {
         return $token->name;

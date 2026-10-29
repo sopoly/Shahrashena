@@ -50,4 +50,20 @@ readonly class TokenService
 
         $accessToken->delete();
     }
+
+    public function revokeOtherDevices(User $user): void
+    {
+        $accessToken = $user->currentAccessToken();
+
+        if (! $accessToken instanceof PersonalAccessToken) {
+            return;
+        }
+
+        $this->refreshTokenService->revokeAllExcept(
+            $user,
+            $this->accessTokenService->deviceIdOf($accessToken),
+        );
+
+        $this->accessTokenService->revokeAllExcept($user, $accessToken);
+    }
 }

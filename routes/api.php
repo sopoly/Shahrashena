@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PhoneChangeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
@@ -38,8 +39,19 @@ Route::prefix('v1')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/profile', [ProfileController::class, 'show']);
-        Route::patch('/profile', [ProfileController::class, 'update']);
+        Route::prefix('/profile')->group(function () {
+            Route::controller(ProfileController::class)->group(function () {
+                Route::get('/', 'show');
+                Route::patch('/', 'update');
+            });
+            Route::prefix('/phone')->group(function () {
+                Route::controller(PhoneChangeController::class)->group(function () {
+                    Route::post('/request-change', 'request');
+                    Route::post('/verify-change', 'verify');
+                });
+            });
+        });
+
     });
 });
 

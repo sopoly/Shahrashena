@@ -2,12 +2,12 @@
 
 namespace App\Actions\Auth;
 
+use App\Exceptions\InvalidOtpCodeException;
 use App\Models\User;
 use App\Models\User\UserFields;
 use App\Services\Auth\AuthResult;
 use App\Services\Auth\TokenService;
 use App\Services\Otp\OtpService;
-use Illuminate\Validation\ValidationException;
 
 readonly class VerifyOtpAction
 {
@@ -19,9 +19,7 @@ readonly class VerifyOtpAction
     public function __invoke(string $phoneNumber, string $code, ?string $deviceId): AuthResult
     {
         if (! $this->otpService->verify($phoneNumber, $code)) {
-            throw ValidationException::withMessages([
-                UserFields::OTP_CODE => ['کد تایید منقضی شده یا نامعتبر است.'],
-            ]);
+            throw InvalidOtpCodeException::make();
         }
 
         $user = User::firstOrCreate([UserFields::PHONE_NUMBER => $phoneNumber]);

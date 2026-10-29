@@ -71,6 +71,14 @@ class RefreshTokenService
             ->delete();
     }
 
+    public function revokeAllExcept(User $user, string $deviceId): void
+    {
+        RefreshToken::query()
+            ->where(RefreshTokenFields::USER_ID, $user->getKey())
+            ->where(RefreshTokenFields::DEVICE_ID, '!=', $deviceId)
+            ->delete();
+    }
+
     private function generate(): IssuedRefreshToken
     {
         return new IssuedRefreshToken(
