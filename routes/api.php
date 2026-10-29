@@ -33,10 +33,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/{item}/reviews', [ItemReviewController::class, 'store']);
         Route::get('/{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/send-otp', [AuthController::class, 'sendOtp']);
-    Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('/login', 'login');
+        Route::post('/send-otp', 'sendOtp');
+        Route::post('/verify-otp', 'verifyOtp');
+        Route::post('/refresh', 'refresh');
+    });
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::prefix('/profile')->group(function () {
