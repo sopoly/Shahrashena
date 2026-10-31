@@ -3,7 +3,6 @@
 namespace App\Services\Sms;
 
 use App\Services\Sms\Contracts\SmsServiceInterface;
-use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
 
 readonly class LogSmsService implements SmsServiceInterface

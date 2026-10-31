@@ -13,6 +13,7 @@ class OtpService
         private readonly OtpCodeGenerator $codeGenerator,
         private readonly OtpRepository $otpRepository,
         private readonly SmsServiceInterface $smsService,
+        private readonly OtpAttemptLimiter $attemptLimiter,
     ) {}
 
     /**
@@ -23,12 +24,20 @@ class OtpService
         $code = $this->codeGenerator->generate();
 
         $this->otpRepository->store($phoneNumber, $code, self::TTL_MINUTES);
+        $this->attemptLimiter->clear($phoneNumber);
 
         $this->smsService->send($phoneNumber, "کد تایید شما: {$code}");
     }
 
     public function verify(string $phoneNumber, string $code): bool
     {
+        if ($this->attemptLimiter->tooManyAttempts($phoneNumber)) {
+            $this->otpRepository->forget($phoneNumber);
+            return false;
+        }
+
+        $this->attemptLimiter->hit($phoneNumber);
+
         $storedCode = $this->otpRepository->get($phoneNumber);
 
         if ($storedCode === null || ! hash_equals($storedCode, $code)) {
@@ -36,6 +45,7 @@ class OtpService
         }
 
         $this->otpRepository->forget($phoneNumber);
+        $this->attemptLimiter->clear($phoneNumber);
 
         return true;
     }

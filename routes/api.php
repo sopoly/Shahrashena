@@ -34,10 +34,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/{item}/reviews/{review}', [ItemReviewController::class, 'show']);
     });
     Route::controller(AuthController::class)->group(function () {
-        Route::post('/login', 'login');
-        Route::post('/send-otp', 'sendOtp');
-        Route::post('/verify-otp', 'verifyOtp');
-        Route::post('/refresh', 'refresh');
+        Route::post('/login', 'login')->middleware('throttle:login');
+        Route::post('/send-otp', 'sendOtp')->middleware('throttle:otp-send');
+        Route::post('/verify-otp', 'verifyOtp')->middleware('throttle:otp-verify');
+        Route::post('/refresh', 'refresh')->middleware('throttle:token-refresh');
     });
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -48,12 +48,11 @@ Route::prefix('v1')->group(function () {
             });
             Route::prefix('/phone')->group(function () {
                 Route::controller(PhoneChangeController::class)->group(function () {
-                    Route::post('/request-change', 'request');
-                    Route::post('/verify-change', 'verify');
+                    Route::post('/request-change', 'request')->middleware('throttle:otp-send');
+                    Route::post('/verify-change', 'verify')->middleware('throttle:otp-verify');
                 });
             });
         });
-
     });
 });
 

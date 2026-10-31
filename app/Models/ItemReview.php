@@ -12,6 +12,8 @@ class ItemReview extends Model
     /** @use HasFactory<\Database\Factories\ItemReviewFactory> */
     use HasFactory;
 
+    protected $guarded = [];
+
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class, ItemReviewFields::ITEM_ID);
