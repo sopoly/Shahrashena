@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Sms\Contracts\SmsServiceInterface;
-use App\Services\Sms\LogSmsService;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,9 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(SmsServiceInterface::class, function ($app) {
-            return new LogSmsService(Log::channel('sms'));
-        });
+        //
     }
 
     /**
