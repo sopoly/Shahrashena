@@ -37,12 +37,16 @@ class RateLimitServiceProvider extends ServiceProvider
 
     private function phone(Request $request): string
     {
-        return app(PhoneNumberNormalizer::class)
-            ->normalize((string) $request->input(UserFields::PHONE_NUMBER));
+        $phone = $request->input(UserFields::PHONE_NUMBER);
+
+        return is_string($phone)
+            ? app(PhoneNumberNormalizer::class)->normalize($phone)
+            : '';
     }
 
     private function email(Request $request): string
     {
-        return Str::lower((string) $request->input(UserFields::EMAIL));
+        $email = $request->input(UserFields::EMAIL);
+        return is_string($email) ? Str::lower($email) : '';
     }
 }
